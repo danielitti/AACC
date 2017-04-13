@@ -137,24 +137,35 @@ view: web_traffic_ga {
     type: count
   }
 
-  measure: visits_funnel_1 {
-    label: "# Visits Funnel 1"
-    hidden: yes
+  measure: visits_pp {
+    label: "# Visits Product Page"
+    hidden: no
     type: count
     filters: {
       field: page_visited
       value: "/breakdown-cover/connected-car"
     }
+    link: {
+      label: "Visits Product Page"
+      url: "/explore/ga_big_query_web_data/web_traffic_ga?fields=web_traffic_ga.visit_timestamp_date,web_traffic_ga.visits_pp&fill_fields=web_traffic_ga.visit_timestamp_date&sorts=web_traffic_ga.visit_timestamp_date&limit=30&column_limit=50&query_timezone=Europe%2FLondon&vis=%7B%7D&filter_config=%7B%7D&origin=share-expanded"
+    }
   }
 
-  measure: visits_funnel_2 {
-    label: "# Visits Funnel 2"
-    hidden: yes
+  measure: visits_ryi {
+    label: "# Visits Register your interest"
+    hidden: no
     type: count
     filters: {
       field: page_visited
       value: "/breakdown-cover/connected-car/enquiry"
     }
+  }
+
+  measure: visits_ratio {
+    label: "Visits Ratio %"
+    type: number
+    value_format: "0\%"
+    sql:  ${visits_ryi}/${visits_pp}*100 ;;
   }
 
   measure: visitors {
