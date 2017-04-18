@@ -18,10 +18,10 @@ view: stock {
     sql: ${TABLE}.STOCK_DATE ;;
   }
 
-  dimension: max_date {
-    type: string
-    hidden: yes
-    sql: ${TABLE}.STOCK_DATE ;;
+  measure: last_stock_date {
+    type: date
+    sql: MAX(${TABLE}.STOCK_DATE);;
+    convert_tz: no
   }
 
   measure: qty_available {
@@ -50,10 +50,7 @@ view: stock {
     label: "# Stock"
     type: min
     sql:  ${TABLE}.QTY_IN_STOCK ;;
-   # filters: {
-  #    field: max_date
- #     value: ''
-#    }
   }
+
 
 }
