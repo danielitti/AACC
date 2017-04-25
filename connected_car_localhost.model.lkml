@@ -30,3 +30,5 @@ explore: orders_details {
 # used together
 # explore: customers {}
 # explore: orders {}
+
+explore: calls_classification {}

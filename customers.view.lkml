@@ -47,44 +47,10 @@ view: customers {
     sql: ${TABLE}.LOCATION ;;
   }
 
-  dimension: location_latitude {
-    type: string
-    hidden:  yes
-    sql: case
-      when ${TABLE}.location = 'Cornwall' then '50.503632'
-    end;;
-  }
-
-  dimension: location_longitude {
-    type: string
-    hidden:  yes
-    sql: case
-      when ${TABLE}.location = 'Cornwall' then '-4.652498'
-    end;;
-  }
-
-  dimension: uk_postcode {
-    type: string
-    hidden:  yes
-    sql: case
-      when ${TABLE}.location = 'Avon' then 'CV'
-      when ${TABLE}.location = 'Cornwall' then 'TR'
-      when ${TABLE}.location = 'W Midlands' then 'B'
-      when ${TABLE}.location = 'West Yorkshire' then 'BD'
-    end;;
-  }
-
-  dimension: map_location {
-    type: location
-    hidden:  yes
-    sql_latitude:${location_latitude};;
-    sql_longitude:${location_longitude};;
-  }
-
   dimension: map_area {
     type:  string
     map_layer_name: uk_postcode_areas
-    sql:${uk_postcode} ;;
+    sql:${TABLE}.UK_POSTCODE_AREA ;;
   }
 
   dimension_group: renewal {

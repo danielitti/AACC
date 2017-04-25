@@ -2,14 +2,18 @@
   title: Car Genie KPIs
   layout: grid
   rows:
-  - elements: [web_traffic_kpi_visit1, web_traffic_kpi_visit2, web_traffic_kpi_visit_ratio]
-    height: 200
-  - elements: [orders_kpi_total_orders, orders_kpi_total_orders_amount, orders_kpi_total_orders_discount_amount, stock_kpi_stock]
-    height: 200
+  - elements: [web_traffic_kpi_visit_pp, web_traffic_kpi_visit_shp, web_traffic_kpi_visit_fr]
+    height: 150
+  - elements: [web_traffic_kpi_visit_pp_to_shp_ratio, web_traffic_kpi_visit_shp_to_fr_ratio]
+    height: 100
+  - elements: [web_traffic_kpi_visit_pp_to_fr_ratio]
+    height: 100
+  - elements: [orders_kpi_orders_count, orders_kpi_orders_amount, orders_kpi_discounted_orders_count, orders_kpi_discounted_orders_amount]
+    height: 150
   - elements: [orders_kpi_most_common_make, orders_kpi_most_common_model]
-    height: 200
-  - elements: [app_kpi_total_download, app_kpi_total_update, app_kpi_total_ratings, app_kpi_avg_ratings]
-    height: 200
+    height: 150
+  - elements: [stock_kpi_last_stock_date, stock_kpi_stock]
+    height: 150
 
   filters:
   - name: dashboard_date
@@ -18,7 +22,7 @@
     default_value: 2017/04/01 to 2017/04/05
 
   elements:
-  - name: web_traffic_kpi_visit1
+  - name: web_traffic_kpi_visit_pp
     # width: 4
     # height: 2
     # top: 1
@@ -39,14 +43,14 @@
     legend_position: center
     series_types: {}
 
-  - name: web_traffic_kpi_visit2
+  - name: web_traffic_kpi_visit_shp
     # width: 4
     # height: 2
-    title: Register Your Interest Views
+    title: Shop Home Page Views
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_ryi]
+    measures: [web_traffic_ga.visits_shp]
     listen:
       dashboard_date: web_traffic_ga.visit_timestamp_date
     query_timezone: Europe/London
@@ -59,14 +63,34 @@
     legend_position: center
     series_types: {}
 
-  - name: web_traffic_kpi_visit_ratio
+  - name: web_traffic_kpi_visit_fr
+    # width: 4
+    # height: 2
+    title: Final Receipt Page Views
+    type: single_value
+    model: ga_big_query_web_data
+    explore: web_traffic_ga
+    measures: [web_traffic_ga.visits_fr]
+    listen:
+      dashboard_date: web_traffic_ga.visit_timestamp_date
+    query_timezone: Europe/London
+    custom_color_enabled: true
+    custom_color: '#8698c6'
+    show_single_value_title: true
+    show_comparison: false
+    font_size: small
+    label_density: 25
+    legend_position: center
+    series_types: {}
+
+  - name: web_traffic_kpi_visit_pp_to_shp_ratio
     # width: 2
     # height: 2
-    title: Views Ratio %
+    title: Product Page to Shop Home Page Visits Ratio %
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_ratio]
+    measures: [web_traffic_ga.visits_pp_to_shp_ratio]
     listen:
       dashboard_date: web_traffic_ga.visit_timestamp_date
     query_timezone: Europe/London
@@ -79,7 +103,65 @@
     legend_position: center
     series_types: {}
 
-  - name: orders_kpi_total_orders_amount
+  - name: web_traffic_kpi_visit_shp_to_fr_ratio
+    # width: 2
+    # height: 2
+    title: Shop Home Page to Final Receipt Visits Ratio %
+    type: single_value
+    model: ga_big_query_web_data
+    explore: web_traffic_ga
+    measures: [web_traffic_ga.visits_shp_to_fr_ratio]
+    listen:
+      dashboard_date: web_traffic_ga.visit_timestamp_date
+    query_timezone: Europe/London
+    custom_color_enabled: true
+    custom_color: '#8698c6'
+    show_single_value_title: true
+    show_comparison: false
+    font_size: small
+    label_density: 25
+    legend_position: center
+    series_types: {}
+
+  - name: web_traffic_kpi_visit_pp_to_fr_ratio
+    # width: 2
+    # height: 2
+    title: Product Page to Final Receipt Visits Ratio %
+    type: single_value
+    model: ga_big_query_web_data
+    explore: web_traffic_ga
+    measures: [web_traffic_ga.visits_pp_to_fr_ratio]
+    listen:
+      dashboard_date: web_traffic_ga.visit_timestamp_date
+    query_timezone: Europe/London
+    custom_color_enabled: true
+    custom_color: '#8698c6'
+    show_single_value_title: true
+    show_comparison: false
+    font_size: small
+    label_density: 25
+    legend_position: center
+    series_types: {}
+
+  - name: orders_kpi_orders_count
+    title: Orders
+    type: single_value
+    model: connected_car_localhost
+    explore: orders_details
+    measures: [orders.orders_count]
+    listen:
+      dashboard_date: orders.order_date
+    query_timezone: Europe/London
+    custom_color_enabled: true
+    custom_color: '#8698c6'
+    show_single_value_title: true
+    show_comparison: false
+    font_size: small
+    label_density: 25
+    legend_position: center
+    series_types: {}
+
+  - name: orders_kpi_orders_amount
     # width: 2
     # height: 2
     # top: 10
@@ -101,13 +183,12 @@
     legend_position: center
     series_types: {}
 
-
-  - name: orders_kpi_total_orders
-    title: Orders
+  - name: orders_kpi_discounted_orders_count
+    title: Discounted Orders
     type: single_value
     model: connected_car_localhost
     explore: orders_details
-    measures: [orders.orders_count]
+    measures: [orders.discounted_orders_count]
     listen:
       dashboard_date: orders.order_date
     query_timezone: Europe/London
@@ -120,13 +201,12 @@
     legend_position: center
     series_types: {}
 
-
-  - name: orders_kpi_total_orders_discount_amount
-    title: Orders Discount Amount
+  - name: orders_kpi_discounted_orders_amount
+    title: Discounted Orders Amount
     type: single_value
     model: connected_car_localhost
     explore: orders_details
-    measures: [orders.gross_discount_amount]
+    measures: [orders.discounted_gross_amount]
     listen:
       dashboard_date: orders.order_date
     query_timezone: Europe/London
@@ -138,7 +218,6 @@
     label_density: 25
     legend_position: center
     series_types: {}
-
 
   - name: orders_kpi_most_common_make
     title: Most Common Make
@@ -186,6 +265,26 @@
     series_types: {}
     hidden_fields: [orders.orders_count]
 
+  - name: stock_kpi_last_stock_date
+    title: Stock updated at
+    note:
+      text: this date is driven by the "Date" filter
+      state: expanded
+      display: hover
+    type: single_value
+    model: connected_car_localhost
+    explore: stock
+    measures: [stock.last_stock_date]
+    filters:
+      stock.stock_date: 2017/04/01 to 2017/04/05
+    sorts: [stock.stock_date desc]
+    limit: '1'
+    query_timezone: Europe/London
+    custom_color_enabled: true
+    custom_color: '#8698c6'
+    show_single_value_title: true
+
+
   - name: stock_kpi_stock
     title: Stock
     type: single_value
@@ -208,93 +307,92 @@
     legend_position: center
     series_types: {}
 
-  - name: app_kpi_total_download
-    title: APP Download
-    type: single_value
-    model: connected_car_localhost
-    explore: app_download
-    measures: [app_download.download_count]
-    filters:
-      app_download.download_date: 2017/04/01 to 2017/04/05
-    sorts: [app_download.download_date]
-    limit: '1'
-    column_limit: '50'
-    query_timezone: Europe/London
-    custom_color_enabled: true
-    custom_color: '#8698c6'
-    show_single_value_title: true
-    show_comparison: false
-    font_size: small
-    label_density: 25
-    legend_position: center
-    series_types: {}
+  # - name: app_kpi_total_download
+  #   title: APP Download
+  #   type: single_value
+  #   model: connected_car_localhost
+  #   explore: app_download
+  #   measures: [app_download.download_count]
+  #   filters:
+  #     app_download.download_date: 2017/04/01 to 2017/04/05
+  #   sorts: [app_download.download_date]
+  #   limit: '1'
+  #   column_limit: '50'
+  #   query_timezone: Europe/London
+  #   custom_color_enabled: true
+  #   custom_color: '#8698c6'
+  #   show_single_value_title: true
+  #   show_comparison: false
+  #   font_size: small
+  #   label_density: 25
+  #   legend_position: center
+  #   series_types: {}
 
-  - name: app_kpi_total_update
-    title: APP Update
-    type: single_value
-    model: connected_car_localhost
-    explore: app_download
-    measures: [app_download.updates_count]
-    filters:
-      app_download.download_date: 2017/04/01 to 2017/04/05
-    sorts: [app_download.download_date]
-    limit: '1'
-    column_limit: '50'
-    query_timezone: Europe/London
-    custom_color_enabled: true
-    custom_color: '#8698c6'
-    show_single_value_title: true
-    show_comparison: false
-    font_size: small
-    label_density: 25
-    legend_position: center
-    series_types: {}
+  # - name: app_kpi_total_update
+  #   title: APP Update
+  #   type: single_value
+  #   model: connected_car_localhost
+  #   explore: app_download
+  #   measures: [app_download.updates_count]
+  #   filters:
+  #     app_download.download_date: 2017/04/01 to 2017/04/05
+  #   sorts: [app_download.download_date]
+  #   limit: '1'
+  #   column_limit: '50'
+  #   query_timezone: Europe/London
+  #   custom_color_enabled: true
+  #   custom_color: '#8698c6'
+  #   show_single_value_title: true
+  #   show_comparison: false
+  #   font_size: small
+  #   label_density: 25
+  #   legend_position: center
+  #   series_types: {}
 
-  - name: app_kpi_total_ratings
-    title: APP Ratings
-    type: single_value
-    model: connected_car_localhost
-    explore: app_ratings
-    measures: [app_ratings.rating_count]
-    filters:
-      app_ratings.rating_date: 2017/04/01 to 2017/04/05
-    sorts: [app_ratings.rating_date]
-    limit: '1'
-    column_limit: '50'
-    query_timezone: Europe/London
-    custom_color_enabled: true
-    custom_color: '#8698c6'
-    show_single_value_title: true
-    show_comparison: false
-    font_size: small
-    label_density: 25
-    legend_position: center
-    series_types: {}
+  # - name: app_kpi_total_ratings
+  #   title: APP Ratings
+  #   type: single_value
+  #   model: connected_car_localhost
+  #   explore: app_ratings
+  #   measures: [app_ratings.rating_count]
+  #   filters:
+  #     app_ratings.rating_date: 2017/04/01 to 2017/04/05
+  #   sorts: [app_ratings.rating_date]
+  #   limit: '1'
+  #   column_limit: '50'
+  #   query_timezone: Europe/London
+  #   custom_color_enabled: true
+  #   custom_color: '#8698c6'
+  #   show_single_value_title: true
+  #   show_comparison: false
+  #   font_size: small
+  #   label_density: 25
+  #   legend_position: center
+  #   series_types: {}
 
-  - name: app_kpi_avg_ratings
-    title: APP Average Rating Score
-    type: single_value
-    model: connected_car_localhost
-    explore: app_ratings
-    measures: [app_ratings.avg_rating]
-    filters:
-      app_ratings.rating_date: 2017/04/01 to 2017/04/05
-    sorts: [app_ratings.rating_date]
-    limit: '1'
-    column_limit: '50'
-    query_timezone: Europe/London
-    custom_color_enabled: true
-    custom_color: '#8698c6'
-    show_single_value_title: true
-    show_comparison: false
-    font_size: small
-    label_density: 25
-    legend_position: center
-    series_types: {}
+  # - name: app_kpi_avg_ratings
+  #   title: APP Average Rating Score
+  #   type: single_value
+  #   model: connected_car_localhost
+  #   explore: app_ratings
+  #   measures: [app_ratings.avg_rating]
+  #   filters:
+  #     app_ratings.rating_date: 2017/04/01 to 2017/04/05
+  #   sorts: [app_ratings.rating_date]
+  #   limit: '1'
+  #   column_limit: '50'
+  #   query_timezone: Europe/London
+  #   custom_color_enabled: true
+  #   custom_color: '#8698c6'
+  #   show_single_value_title: true
+  #   show_comparison: false
+  #   font_size: small
+  #   label_density: 25
+  #   legend_position: center
+  #   series_types: {}
 
 
-
-  # - name: add_a_unique_name_1492099746
+  # - name: map
   #   hidden: yes
   #   width: 3
   #   height: 5

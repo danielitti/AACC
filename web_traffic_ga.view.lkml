@@ -19,13 +19,13 @@ view: web_traffic_ga {
         trafficSource.source as page_source,
         trafficSource.medium as page_source_medium,
         device.isMobile as device_is_mobile
-        FROM
-          (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_],
-                        TIMESTAMP('20170324'),
-                        TIMESTAMP('20180401')))
-        WHERE (REGEXP_MATCH(hits.page.pagePath,r"(/breakdown-cover/connected-car|/breakdown-cover/connected-car/enquiry)"))
-        AND hits.type = "PAGE"
-
+        FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_],
+              TIMESTAMP('20170324'),
+              TIMESTAMP('20180401')))
+        WHERE (hits.page.pagePath = '/breakdown-cover/connected-car'
+              OR hits.page.pagePath = '/car-genie'
+              OR hits.page.pagePath like '%connect-checkout%')
+              AND hits.type = "PAGE"
         ;;
 
     }
@@ -102,7 +102,10 @@ view: web_traffic_ga {
     type: string
     sql: case
             when ${TABLE}.PAGE_VISITED = '/breakdown-cover/connected-car' then '1 - Product Page'
-            when ${TABLE}.PAGE_VISITED = '/breakdown-cover/connected-car/enquiry' then '2 - Register your interest'
+            when ${TABLE}.PAGE_VISITED = '/car-genie' then '2 - Shop Home Page'
+            when ${TABLE}.PAGE_VISITED = '/connect-checkout/eligibility' then '3 - Eligibility'
+            when ${TABLE}.PAGE_VISITED = '/connect-checkout/delivery' then '4 - Delivery'
+            when ${TABLE}.PAGE_VISITED = '/connect-checkout/order-summary' then '5 - Order Summary'
             else 'Undefined'
         end;;
   }
@@ -151,21 +154,45 @@ view: web_traffic_ga {
     }
   }
 
-  measure: visits_ryi {
-    label: "# Visits Register your interest"
+  measure: visits_shp {
+    label: "# Visits Shop Home Page"
     hidden: no
     type: count
     filters: {
       field: page_visited
-      value: "/breakdown-cover/connected-car/enquiry"
+      value: "/car-genie"
     }
   }
 
-  measure: visits_ratio {
-    label: "Visits Ratio %"
+  measure: visits_pp_to_shp_ratio {
+    label: "Product Page to Shop Home Page Visits Ratio %"
     type: number
     value_format: "0\%"
-    sql:  ${visits_ryi}/${visits_pp}*100 ;;
+    sql:  ${visits_shp}/${visits_pp}*100 ;;
+  }
+
+  measure: visits_fr {
+    label: "# Visits Final Receipt"
+    hidden: no
+    type: count
+    filters: {
+      field: page_visited
+      value: "/connect-checkout/order-summary"
+    }
+  }
+
+  measure: visits_shp_to_fr_ratio {
+    label: "Shop Home Page to Final Receipt Visits Ratio %"
+    type: number
+    value_format: "0\%"
+    sql:  ${visits_fr}/${visits_shp}*100 ;;
+  }
+
+  measure: visits_pp_to_fr_ratio {
+    label: "Product Page to Final Receipt Visits Ratio %"
+    type: number
+    value_format: "0\%"
+    sql:  ${visits_fr}/${visits_pp}*100 ;;
   }
 
   measure: visitors {

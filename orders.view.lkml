@@ -80,6 +80,12 @@ view: orders {
     sql: ${TABLE}.SUPPLIER_ORDER_REFERENCE ;;
   }
 
+  dimension: dimension_discounted_gross_amount {
+    hidden:  yes
+    type: string
+    sql: ${TABLE}.DISCOUNT_VALUE ;;
+  }
+
   measure: gross_amount {
     group_label: "Gross Amount"
     label: "Gross Amount"
@@ -88,7 +94,7 @@ view: orders {
     sql: ${TABLE}.TOTAL_GROSS ;;
   }
 
-  measure: gross_discount_amount {
+  measure: discounted_gross_amount {
     group_label: "Gross Discount Amount"
     label: "Gross Discount Amount"
     type: sum
@@ -101,4 +107,16 @@ view: orders {
     label: "# of Orders"
     type: count
   }
+
+  measure: discounted_orders_count {
+    group_label: "# Discounted Orders"
+    label: "# of Discounted Orders"
+    type: count
+    filters: {
+     field: dimension_discounted_gross_amount
+     value: "-0"
+    }
+  }
+
+
 }
