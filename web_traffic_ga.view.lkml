@@ -1,13 +1,13 @@
 view: web_traffic_ga {
   derived_table: {
-    sql: SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as visit_Timestamp,
-        SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as visit_Timestamp,
+    sql: SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as view_timestamp,
+        SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as view_timestamp,
         visitStartTime,
         DAYOFWEEK(date) AS visit_Day_Of_Week, #Where 1 = Sunday,
         fullVisitorId AS cookie_ID,
         '' as membership_number,
         visitId as session_ID,
-        hits.page.pagePath as page_Visited,
+        hits.page.pagePath as page,
         totals.timeOnSite as session_Duration_In_Seconds,
         device.mobileDeviceBranding as device_Mobile_Branding,
         device.mobileDeviceModel as device_Mobile_Model,
@@ -15,9 +15,10 @@ view: web_traffic_ga {
         device.browser as device_Browser,
         geoNetwork.city as geo_network_city,
         geoNetwork.country as geo_network_country,
-        trafficSource.referralPath as page_source_referral_path,
-        trafficSource.source as page_source,
-        trafficSource.medium as page_source_medium,
+        trafficSource.referralPath as source_referral_path,
+        trafficSource.source as source,
+        trafficSource.medium as medium,
+        trafficSource.campaign as campaign,
         device.isMobile as device_is_mobile
         FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_],
               TIMESTAMP('20170324'),
@@ -29,8 +30,6 @@ view: web_traffic_ga {
         ;;
 
     }
-
-  #[the-aa-1470042790750:110663916.ga_sessions_20151028]
 
   dimension: cookie_id {
     type: string
@@ -48,7 +47,7 @@ view: web_traffic_ga {
   }
 
   dimension: device_is_mobile {
-    type: string
+    type: yesno
     sql: ${TABLE}.DEVICE_IS_MOBILE ;;
   }
 
@@ -77,35 +76,53 @@ view: web_traffic_ga {
     sql: ${TABLE}.MEMBERSHIP_NUMBER ;;
   }
 
-  dimension: page_source {
+  dimension: source {
     type: string
-    sql: ${TABLE}.PAGE_SOURCE ;;
+    sql: ${TABLE}.SOURCE ;;
   }
 
-  dimension: page_source_medium {
+  dimension: medium {
     type: string
-    sql: ${TABLE}.PAGE_SOURCE_MEDIUM ;;
+    sql: ${TABLE}.MEDIUM ;;
   }
 
-  dimension: page_source_referral_path {
+  dimension: campaign {
     type: string
-    sql: ${TABLE}.PAGE_SOURCE_REFERRAL_PATH ;;
+    sql: ${TABLE}.CAMPAIGN ;;
   }
 
-  dimension: page_visited {
+  dimension: source_referral_path {
     type: string
-    sql: ${TABLE}.PAGE_VISITED ;;
+    sql: ${TABLE}.SOURCE_REFERRAL_PATH ;;
   }
+
+  dimension:page  {
+    type: string
+    sql: ${TABLE}.PAGE ;;
+  }
+
+  dimension: page_name {
+    type: string
+    sql: case
+            when ${page} = '/breakdown-cover/connected-car' then 'Product Page'
+            when ${page} = '/car-genie' then 'Shop Home Page'
+            when ${page} = '/connect-checkout/eligibility' then 'Eligibility'
+            when ${page} = '/connect-checkout/delivery' then 'Delivery'
+            when ${page} = '/connect-checkout/order-summary' then 'Order Summary'
+            else 'Undefined'
+        end;;
+  }
+
 
   dimension: funnel_journey_page {
     label: "Funnel Journey"
     type: string
     sql: case
-            when ${TABLE}.PAGE_VISITED = '/breakdown-cover/connected-car' then '1 - Product Page'
-            when ${TABLE}.PAGE_VISITED = '/car-genie' then '2 - Shop Home Page'
-            when ${TABLE}.PAGE_VISITED = '/connect-checkout/eligibility' then '3 - Eligibility'
-            when ${TABLE}.PAGE_VISITED = '/connect-checkout/delivery' then '4 - Delivery'
-            when ${TABLE}.PAGE_VISITED = '/connect-checkout/order-summary' then '5 - Order Summary'
+            when ${page} = '/breakdown-cover/connected-car' then '1 - Product Page'
+            when ${page} = '/car-genie' then '2 - Shop Home Page'
+            when ${page} = '/connect-checkout/eligibility' then '3 - Eligibility'
+            when ${page} = '/connect-checkout/delivery' then '4 - Delivery'
+            when ${page} = '/connect-checkout/order-summary' then '5 - Order Summary'
             else 'Undefined'
         end;;
   }
@@ -129,70 +146,70 @@ view: web_traffic_ga {
         end;;
   }
 
-  dimension_group: visit_timestamp {
+  dimension_group: view_timestamp {
     type: time
     timeframes: [time, date, week, month]
-    sql: ${TABLE}.VISIT_TIMESTAMP ;;
+    sql: ${TABLE}.view_timestamp ;;
   }
 
-  measure: visits {
+  measure: views {
     label: "# Views"
     type: count
   }
 
-  measure: visits_pp {
-    label: "# Visits Product Page"
+  measure: views_pp {
+    label: "# Views Product Page"
     hidden: no
     type: count
     filters: {
-      field: page_visited
+      field: page
       value: "/breakdown-cover/connected-car"
     }
     link: {
-      label: "Visits Product Page"
-      url: "/explore/ga_big_query_web_data/web_traffic_ga?fields=web_traffic_ga.visit_timestamp_date,web_traffic_ga.visits_pp&fill_fields=web_traffic_ga.visit_timestamp_date&sorts=web_traffic_ga.visit_timestamp_date&limit=30&column_limit=50&query_timezone=Europe%2FLondon&vis=%7B%7D&filter_config=%7B%7D&origin=share-expanded"
+      label: "Views Product Page"
+      url: "/explore/ga_big_query_web_data/web_traffic_ga?fields=web_traffic_ga.view_timestamp_date,web_traffic_ga.visits_pp&fill_fields=web_traffic_ga.view_timestamp_date&sorts=web_traffic_ga.view_timestamp_date&limit=30&column_limit=50&query_timezone=Europe%2FLondon&vis=%7B%7D&filter_config=%7B%7D&origin=share-expanded"
     }
   }
 
-  measure: visits_shp {
-    label: "# Visits Shop Home Page"
+  measure: views_shp {
+    label: "# Views Shop Home Page"
     hidden: no
     type: count
     filters: {
-      field: page_visited
+      field: page
       value: "/car-genie"
     }
   }
 
-  measure: visits_pp_to_shp_ratio {
-    label: "Product Page to Shop Home Page Visits Ratio %"
-    type: number
-    value_format: "0\%"
-    sql:  ${visits_shp}/${visits_pp}*100 ;;
-  }
-
-  measure: visits_fr {
-    label: "# Visits Final Receipt"
+  measure: views_fr {
+    label: "# Views Final Receipt"
     hidden: no
     type: count
     filters: {
-      field: page_visited
+      field: page
       value: "/connect-checkout/order-summary"
     }
   }
 
-  measure: visits_shp_to_fr_ratio {
-    label: "Shop Home Page to Final Receipt Visits Ratio %"
+  measure: views_pp_to_shp_ratio {
+    label: "Product Page to Shop Home Page Views Ratio %"
     type: number
     value_format: "0\%"
-    sql:  ${visits_fr}/${visits_shp}*100 ;;
+    sql:  ${views_shp}/${views_pp}*100 ;;
   }
 
-  measure: visits_pp_to_fr_ratio {
-    label: "Product Page to Final Receipt Visits Ratio %"
+  measure: views_shp_to_fr_ratio {
+    label: "Shop Home Page to Final Receipt Views Ratio %"
     type: number
     value_format: "0\%"
-    sql:  ${visits_fr}/${visits_pp}*100 ;;
+    sql:  ${views_fr}/${views_shp}*100 ;;
+  }
+
+  measure: views_pp_to_fr_ratio {
+    label: "Product Page to Final Receipt Views Ratio %"
+    type: number
+    value_format: "0\%"
+    sql:  ${views_fr}/${views_pp}*100 ;;
   }
 
   measure: visitors {

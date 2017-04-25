@@ -2,11 +2,15 @@
   title: Car Genie KPIs
   layout: grid
   rows:
-  - elements: [web_traffic_kpi_visit_pp, web_traffic_kpi_visit_shp, web_traffic_kpi_visit_fr]
-    height: 150
-  - elements: [web_traffic_kpi_visit_pp_to_shp_ratio, web_traffic_kpi_visit_shp_to_fr_ratio]
+  - elements: [web_traffic_title]
     height: 100
-  - elements: [web_traffic_kpi_visit_pp_to_fr_ratio]
+  - elements: [web_traffic_kpi_views_pp, web_traffic_kpi_views_shp, web_traffic_kpi_views_fr]
+    height: 150
+  - elements: [web_traffic_kpi_views_pp_to_shp_ratio, web_traffic_kpi_views_shp_to_fr_ratio]
+    height: 100
+  - elements: [web_traffic_kpi_views_pp_to_fr_ratio]
+    height: 100
+  - elements: [orders_title]
     height: 100
   - elements: [orders_kpi_orders_count, orders_kpi_orders_amount, orders_kpi_discounted_orders_count, orders_kpi_discounted_orders_amount]
     height: 150
@@ -19,10 +23,23 @@
   - name: dashboard_date
     title: 'Date'
     type: date_filter
-    default_value: 2017/04/01 to 2017/04/05
+    default_value: last 7 days
 
   elements:
-  - name: web_traffic_kpi_visit_pp
+
+  - name: web_traffic_title
+    type: text
+    title_text: Web Traffic
+    #subtitle_text:
+    #body_text:
+
+  - name: orders_title
+    type: text
+    title_text: Orders
+    #subtitle_text:
+    #body_text:
+
+  - name: web_traffic_kpi_views_pp
     # width: 4
     # height: 2
     # top: 1
@@ -30,9 +47,9 @@
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_pp]
+    measures: [web_traffic_ga.views_pp]
     listen:
-      dashboard_date: web_traffic_ga.visit_timestamp_date
+      dashboard_date: web_traffic_ga.view_timestamp_date
     query_timezone: Europe/London
     custom_color_enabled: true
     custom_color: '#8698c6'
@@ -43,16 +60,16 @@
     legend_position: center
     series_types: {}
 
-  - name: web_traffic_kpi_visit_shp
+  - name: web_traffic_kpi_views_shp
     # width: 4
     # height: 2
     title: Shop Home Page Views
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_shp]
+    measures: [web_traffic_ga.views_shp]
     listen:
-      dashboard_date: web_traffic_ga.visit_timestamp_date
+      dashboard_date: web_traffic_ga.view_timestamp_date
     query_timezone: Europe/London
     custom_color_enabled: true
     custom_color: '#8698c6'
@@ -63,16 +80,16 @@
     legend_position: center
     series_types: {}
 
-  - name: web_traffic_kpi_visit_fr
+  - name: web_traffic_kpi_views_fr
     # width: 4
     # height: 2
     title: Final Receipt Page Views
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_fr]
+    measures: [web_traffic_ga.views_fr]
     listen:
-      dashboard_date: web_traffic_ga.visit_timestamp_date
+      dashboard_date: web_traffic_ga.view_timestamp_date
     query_timezone: Europe/London
     custom_color_enabled: true
     custom_color: '#8698c6'
@@ -83,16 +100,16 @@
     legend_position: center
     series_types: {}
 
-  - name: web_traffic_kpi_visit_pp_to_shp_ratio
+  - name: web_traffic_kpi_views_pp_to_shp_ratio
     # width: 2
     # height: 2
     title: Product Page to Shop Home Page Visits Ratio %
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_pp_to_shp_ratio]
+    measures: [web_traffic_ga.views_pp_to_shp_ratio]
     listen:
-      dashboard_date: web_traffic_ga.visit_timestamp_date
+      dashboard_date: web_traffic_ga.view_timestamp_date
     query_timezone: Europe/London
     custom_color_enabled: true
     custom_color: '#8698c6'
@@ -103,16 +120,16 @@
     legend_position: center
     series_types: {}
 
-  - name: web_traffic_kpi_visit_shp_to_fr_ratio
+  - name: web_traffic_kpi_views_shp_to_fr_ratio
     # width: 2
     # height: 2
     title: Shop Home Page to Final Receipt Visits Ratio %
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_shp_to_fr_ratio]
+    measures: [web_traffic_ga.views_shp_to_fr_ratio]
     listen:
-      dashboard_date: web_traffic_ga.visit_timestamp_date
+      dashboard_date: web_traffic_ga.view_timestamp_date
     query_timezone: Europe/London
     custom_color_enabled: true
     custom_color: '#8698c6'
@@ -123,16 +140,16 @@
     legend_position: center
     series_types: {}
 
-  - name: web_traffic_kpi_visit_pp_to_fr_ratio
+  - name: web_traffic_kpi_views_pp_to_fr_ratio
     # width: 2
     # height: 2
     title: Product Page to Final Receipt Visits Ratio %
     type: single_value
     model: ga_big_query_web_data
     explore: web_traffic_ga
-    measures: [web_traffic_ga.visits_pp_to_fr_ratio]
+    measures: [web_traffic_ga.views_pp_to_fr_ratio]
     listen:
-      dashboard_date: web_traffic_ga.visit_timestamp_date
+      dashboard_date: web_traffic_ga.view_timestamp_date
     query_timezone: Europe/London
     custom_color_enabled: true
     custom_color: '#8698c6'
@@ -226,8 +243,8 @@
     explore: orders_details
     dimensions: [orders.car_make]
     measures: [orders.orders_count]
-    filters:
-      orders.order_date: 2017/04/01 to 2017/04/05
+    listen:
+      dashboard_date: orders.order_date
     sorts: [orders.orders_count desc]
     limit: '1'
     column_limit: '50'
@@ -249,8 +266,8 @@
     explore: orders_details
     dimensions: [orders.car_model]
     measures: [orders.orders_count]
-    filters:
-      orders.order_date: 2017/04/01 to 2017/04/05
+    listen:
+      dashboard_date: orders.order_date
     sorts: [orders.orders_count desc]
     limit: '1'
     column_limit: '50'
@@ -275,8 +292,8 @@
     model: connected_car_localhost
     explore: stock
     measures: [stock.last_stock_date]
-    filters:
-      stock.stock_date: 2017/04/01 to 2017/04/05
+    listen:
+      dashboard_date: stock.stock_date
     sorts: [stock.stock_date desc]
     limit: '1'
     query_timezone: Europe/London
@@ -292,8 +309,8 @@
     explore: stock
     dimensions: [stock.stock_date]
     measures: [stock.qty_stock]
-    filters:
-      stock.stock_date: 2017/04/01 to 2017/04/05
+    listen:
+      dashboard_date: stock.stock_date
     sorts: [stock.stock_date desc]
     limit: '1'
     column_limit: '50'

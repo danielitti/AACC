@@ -113,9 +113,9 @@
     model: ga_big_query_web_data
     explore: web_traffic_ga
     dimensions: [web_traffic_ga.funnel_journey_page]
-    measures: [web_traffic_ga.visits]
+    measures: [web_traffic_ga.views]
     listen:
-      dashboard_date: web_traffic_ga.visit_timestamp_date
+      dashboard_date: web_traffic_ga.view_timestamp_date
     sorts: [web_traffic_ga.funnel_journey_page]
     limit: '500'
     column_limit: '50'
