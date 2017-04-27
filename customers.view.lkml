@@ -61,7 +61,7 @@ view: customers {
   }
 
   dimension: tenure {
-    type: string
+    type: number
     sql: ${TABLE}.TENURE ;;
   }
 

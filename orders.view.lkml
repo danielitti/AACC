@@ -87,7 +87,7 @@ view: orders {
   }
 
   measure: gross_amount {
-    group_label: "Gross Amount"
+    group_label: "Amount"
     label: "Gross Amount"
     type: sum
     value_format_name: gbp
@@ -95,7 +95,7 @@ view: orders {
   }
 
   measure: discounted_gross_amount {
-    group_label: "Gross Discount Amount"
+    group_label: "Amount"
     label: "Gross Discount Amount"
     type: sum
     value_format_name: gbp
@@ -103,18 +103,34 @@ view: orders {
   }
 
   measure: orders_count {
-    group_label: "# Orders"
+    group_label: "Orders"
     label: "# of Orders"
     type: count
+    link: {
+      label: "Top Car Makes and Models"
+      url: "/dashboards/18"
+    }
+    link: {
+      label: "Customer Demographic"
+      url: "/dashboards/19"
+    }
+    link: {
+      label: "Map"
+      url: "/looks/253"
+    }
   }
 
   measure: discounted_orders_count {
-    group_label: "# Discounted Orders"
+    group_label: "Orders"
     label: "# of Discounted Orders"
     type: count
     filters: {
      field: dimension_discounted_gross_amount
      value: "-0"
+    }
+    link: {
+      label: "Map"
+      url: "/looks/254"
     }
   }
 

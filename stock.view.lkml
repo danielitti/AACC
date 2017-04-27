@@ -18,10 +18,10 @@ view: stock {
     sql: ${TABLE}.STOCK_DATE ;;
   }
 
-  measure: last_stock_date {
+  dimension: last_stock_date {
     type: date
-    sql: MAX(${TABLE}.STOCK_DATE);;
     convert_tz: no
+    sql: ${TABLE}.MAX_STOCK_DATE;;
   }
 
   measure: qty_available {

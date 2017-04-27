@@ -3,7 +3,7 @@ view: web_traffic_ga {
     sql: SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as view_timestamp,
         SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as view_timestamp,
         visitStartTime,
-        DAYOFWEEK(date) AS visit_Day_Of_Week, #Where 1 = Sunday,
+        DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
         fullVisitorId AS cookie_ID,
         '' as membership_number,
         visitId as session_ID,
@@ -123,6 +123,8 @@ view: web_traffic_ga {
             when ${page} = '/connect-checkout/eligibility' then '3 - Eligibility'
             when ${page} = '/connect-checkout/delivery' then '4 - Delivery'
             when ${page} = '/connect-checkout/order-summary' then '5 - Order Summary'
+            when ${page} = '/connect-checkout/payment' then '6 - Payment'
+            when ${page} = '/connect-checkout/receipt' then '7 - Receipt'
             else 'Undefined'
         end;;
   }
@@ -132,16 +134,16 @@ view: web_traffic_ga {
     sql: ${TABLE}.SESSION_ID ;;
   }
 
-  dimension: visit_day_of_week {
+  dimension: day_of_week {
     type: string
     sql: case
-            when ${TABLE}.VISIT_DAY_OF_WEEK = 1 then '7 - Sunday'
-            when ${TABLE}.VISIT_DAY_OF_WEEK = 2 then '1 - Monday'
-            when ${TABLE}.VISIT_DAY_OF_WEEK = 3 then '2 - Tuesday'
-            when ${TABLE}.VISIT_DAY_OF_WEEK = 4 then '3 - Wednesday'
-            when ${TABLE}.VISIT_DAY_OF_WEEK = 5 then '4 - Thursday'
-            when ${TABLE}.VISIT_DAY_OF_WEEK = 6 then '5 - Friday'
-            when ${TABLE}.VISIT_DAY_OF_WEEK = 7 then '6 - Saturday'
+            when ${TABLE}.DAY_OF_WEEK = 1 then '7 - Sunday'
+            when ${TABLE}.DAY_OF_WEEK = 2 then '1 - Monday'
+            when ${TABLE}.DAY_OF_WEEK = 3 then '2 - Tuesday'
+            when ${TABLE}.DAY_OF_WEEK = 4 then '3 - Wednesday'
+            when ${TABLE}.DAY_OF_WEEK = 5 then '4 - Thursday'
+            when ${TABLE}.DAY_OF_WEEK = 6 then '5 - Friday'
+            when ${TABLE}.DAY_OF_WEEK = 7 then '6 - Saturday'
             else null
         end;;
   }
@@ -154,62 +156,74 @@ view: web_traffic_ga {
 
   measure: views {
     label: "# Views"
+    group_label: "# Views"
     type: count
+    link: {
+      label: "Views Trend"
+      url: "/looks/244"
+    }
+    link: {
+      label: "Views Trend  by Medium"
+      url: "/looks/246"
+#      #url: "/explore/ga_big_query_web_data/web_traffic_ga?fields=web_traffic_ga.view_timestamp_date,web_traffic_ga.visits_pp&fill_fields=web_traffic_ga.view_timestamp_date&sorts=web_traffic_ga.view_timestamp_date&limit=30&column_limit=50&query_timezone=Europe%2FLondon&vis=%7B%7D&filter_config=%7B%7D&origin=share-expanded"
+    }
   }
 
   measure: views_pp {
     label: "# Views Product Page"
+    group_label: "# Views"
     hidden: no
     type: count
     filters: {
       field: page
       value: "/breakdown-cover/connected-car"
     }
-    link: {
-      label: "Views Product Page"
-      url: "/explore/ga_big_query_web_data/web_traffic_ga?fields=web_traffic_ga.view_timestamp_date,web_traffic_ga.visits_pp&fill_fields=web_traffic_ga.view_timestamp_date&sorts=web_traffic_ga.view_timestamp_date&limit=30&column_limit=50&query_timezone=Europe%2FLondon&vis=%7B%7D&filter_config=%7B%7D&origin=share-expanded"
-    }
   }
 
-  measure: views_shp {
-    label: "# Views Shop Home Page"
+  measure: views_d {
+    label: "# Views Delivery Page"
+    group_label: "# Views"
     hidden: no
     type: count
     filters: {
       field: page
-      value: "/car-genie"
+      value: "/connect-checkout/delivery"
     }
   }
 
   measure: views_fr {
     label: "# Views Final Receipt"
+    group_label: "# Views"
     hidden: no
     type: count
     filters: {
       field: page
-      value: "/connect-checkout/order-summary"
+      value: "/connect-checkout/receipt"
     }
-  }
-
-  measure: views_pp_to_shp_ratio {
-    label: "Product Page to Shop Home Page Views Ratio %"
-    type: number
-    value_format: "0\%"
-    sql:  ${views_shp}/${views_pp}*100 ;;
-  }
-
-  measure: views_shp_to_fr_ratio {
-    label: "Shop Home Page to Final Receipt Views Ratio %"
-    type: number
-    value_format: "0\%"
-    sql:  ${views_fr}/${views_shp}*100 ;;
   }
 
   measure: views_pp_to_fr_ratio {
     label: "Product Page to Final Receipt Views Ratio %"
+    group_label: "Views Ratio %"
     type: number
     value_format: "0\%"
     sql:  ${views_fr}/${views_pp}*100 ;;
+    link: {
+      label: "Views Ratio % Analysis"
+      url: "/looks/251"
+    }
+  }
+
+  measure: views_shp_to_fr_ratio {
+    label: "Delivery Page to Final Receipt Views Ratio %"
+    group_label: "Views Ratio %"
+    type: number
+    value_format: "0\%"
+    sql:  ${views_fr}/${views_d}*100 ;;
+    link: {
+      label: "Views Ratio % Analysis"
+      url: "/looks/252"
+    }
   }
 
   measure: visitors {
