@@ -61,8 +61,19 @@ view: customers {
   }
 
   dimension: tenure {
-    type: number
-    sql: ${TABLE}.TENURE ;;
+    label: "Tenure Tier"
+    type: string
+    sql: case
+    when ${TABLE}.TENURE =1 then '1 - Tenure 1'
+    when ${TABLE}.TENURE =2 then '2 - Tenure 2'
+    when ${TABLE}.TENURE =3 then '3 - Tenure 3'
+    when ${TABLE}.TENURE =4 then '4 - Tenure 4'
+    when ${TABLE}.TENURE =5 then '5 - Tenure 5'
+    when ${TABLE}.TENURE >=6 and ${TABLE}.TENURE <=10 then '6 - Tenure 6-10'
+    when ${TABLE}.TENURE >=11 and ${TABLE}.TENURE <=19 then '7 - Tenure 11-19'
+    when ${TABLE}.TENURE >=20 then '8 - Tenure 20+'
+    else 'Undefined'
+    end;;
   }
 
   measure: customrrs_count {
