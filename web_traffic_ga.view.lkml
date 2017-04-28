@@ -53,8 +53,8 @@ view: web_traffic_ga {
                   trafficSource.campaign as campaign,
                   device.isMobile as device_is_mobile
                   FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_intraday_],
-                        TIMESTAMP('20170324'),
-                        TIMESTAMP('20180401')))
+                        TIMESTAMP(replace(string(current_date()), '-', '')),
+                        TIMESTAMP(replace(string(current_date()), '-', ''))))
                   WHERE (hits.page.pagePath = '/breakdown-cover/connected-car'
                         OR hits.page.pagePath = '/car-genie'
                         OR hits.page.pagePath like '%connect-checkout%')
