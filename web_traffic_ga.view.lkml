@@ -1,32 +1,64 @@
 view: web_traffic_ga {
   derived_table: {
-    sql: SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as view_timestamp,
-        SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as view_timestamp,
-        visitStartTime,
-        DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
-        fullVisitorId AS cookie_ID,
-        '' as membership_number,
-        visitId as session_ID,
-        hits.page.pagePath as page,
-        totals.timeOnSite as session_Duration_In_Seconds,
-        device.mobileDeviceBranding as device_Mobile_Branding,
-        device.mobileDeviceModel as device_Mobile_Model,
-        device.operatingSystem as device_Operating_System,
-        device.browser as device_Browser,
-        geoNetwork.city as geo_network_city,
-        geoNetwork.country as geo_network_country,
-        trafficSource.referralPath as source_referral_path,
-        trafficSource.source as source,
-        trafficSource.medium as medium,
-        trafficSource.campaign as campaign,
-        device.isMobile as device_is_mobile
-        FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_],
-              TIMESTAMP('20170324'),
-              TIMESTAMP('20180401')))
-        WHERE (hits.page.pagePath = '/breakdown-cover/connected-car'
-              OR hits.page.pagePath = '/car-genie'
-              OR hits.page.pagePath like '%connect-checkout%')
-              AND hits.type = "PAGE"
+    sql:  SELECT  *
+          FROM
+
+          (SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as view_timestamp,
+                  SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as view_timestamp,
+                  visitStartTime,
+                  DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
+                  fullVisitorId AS cookie_ID,
+                  '' as membership_number,
+                  visitId as session_ID,
+                  CASE WHEN hits.page.pagePath like '%/connect-checkout/receipt/%' THEN LEFT(hits.page.pagePath,26) ELSE hits.page.pagePath END as page,
+                  totals.timeOnSite as session_Duration_In_Seconds,
+                  device.mobileDeviceBranding as device_Mobile_Branding,
+                  device.mobileDeviceModel as device_Mobile_Model,
+                  device.operatingSystem as device_Operating_System,
+                  device.browser as device_Browser,
+                  geoNetwork.city as geo_network_city,
+                  geoNetwork.country as geo_network_country,
+                  trafficSource.referralPath as source_referral_path,
+                  trafficSource.source as source,
+                  trafficSource.medium as medium,
+                  trafficSource.campaign as campaign,
+                  device.isMobile as device_is_mobile
+                  FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_],
+                        TIMESTAMP('20170324'),
+                        TIMESTAMP('20180401')))
+                  WHERE (hits.page.pagePath = '/breakdown-cover/connected-car'
+                        OR hits.page.pagePath = '/car-genie'
+                        OR hits.page.pagePath like '%connect-checkout%')
+                        AND hits.type = "PAGE"),
+
+
+          (SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as view_timestamp,
+                  SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as view_timestamp,
+                  visitStartTime,
+                  DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
+                  fullVisitorId AS cookie_ID,
+                  '' as membership_number,
+                  visitId as session_ID,
+                  CASE WHEN hits.page.pagePath like '%/connect-checkout/receipt/%' THEN LEFT(hits.page.pagePath,26) ELSE hits.page.pagePath END as page,
+                  totals.timeOnSite as session_Duration_In_Seconds,
+                  device.mobileDeviceBranding as device_Mobile_Branding,
+                  device.mobileDeviceModel as device_Mobile_Model,
+                  device.operatingSystem as device_Operating_System,
+                  device.browser as device_Browser,
+                  geoNetwork.city as geo_network_city,
+                  geoNetwork.country as geo_network_country,
+                  trafficSource.referralPath as source_referral_path,
+                  trafficSource.source as source,
+                  trafficSource.medium as medium,
+                  trafficSource.campaign as campaign,
+                  device.isMobile as device_is_mobile
+                  FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_intraday_],
+                        TIMESTAMP('20170324'),
+                        TIMESTAMP('20180401')))
+                  WHERE (hits.page.pagePath = '/breakdown-cover/connected-car'
+                        OR hits.page.pagePath = '/car-genie'
+                        OR hits.page.pagePath like '%connect-checkout%')
+                        AND hits.type = "PAGE")
         ;;
 
     }
@@ -109,6 +141,7 @@ view: web_traffic_ga {
             when ${page} = '/connect-checkout/eligibility' then 'Eligibility'
             when ${page} = '/connect-checkout/delivery' then 'Delivery'
             when ${page} = '/connect-checkout/order-summary' then 'Order Summary'
+            when ${page} = '/connect-checkout/receipt/' then '7 - Receipt'
             else 'Undefined'
         end;;
   }
@@ -124,7 +157,7 @@ view: web_traffic_ga {
             when ${page} = '/connect-checkout/delivery' then '4 - Delivery'
             when ${page} = '/connect-checkout/order-summary' then '5 - Order Summary'
             when ${page} = '/connect-checkout/payment' then '6 - Payment'
-            when ${page} = '/connect-checkout/receipt' then '7 - Receipt'
+            when ${page} = '/connect-checkout/receipt/' then '7 - Receipt'
             else 'Undefined'
         end;;
   }
@@ -198,7 +231,7 @@ view: web_traffic_ga {
     type: count
     filters: {
       field: page
-      value: "/connect-checkout/receipt"
+      value: "/connect-checkout/receipt/"
     }
   }
 
@@ -206,7 +239,7 @@ view: web_traffic_ga {
     label: "Product Page to Final Receipt Views Ratio %"
     group_label: "Views Ratio %"
     type: number
-    value_format: "0\%"
+    value_format: "0.00\%"
     sql:  ${views_fr}/${views_pp}*100 ;;
     link: {
       label: "Views Ratio % Analysis"
@@ -218,7 +251,7 @@ view: web_traffic_ga {
     label: "Delivery Page to Final Receipt Views Ratio %"
     group_label: "Views Ratio %"
     type: number
-    value_format: "0\%"
+    value_format: "0.00\%"
     sql:  ${views_fr}/${views_d}*100 ;;
     link: {
       label: "Views Ratio % Analysis"
