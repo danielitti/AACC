@@ -22,6 +22,7 @@ view: orders {
   }
 
   dimension: car_vrm {
+    hidden: yes
     label: "Car VRM"
     type: string
     sql: ${TABLE}.VRM ;;
