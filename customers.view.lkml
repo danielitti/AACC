@@ -64,6 +64,7 @@ view: customers {
     label: "Tenure Tier"
     type: string
     sql: case
+    when ${TABLE}.TENURE =0 then '0 - Tenure 0'
     when ${TABLE}.TENURE =1 then '1 - Tenure 1'
     when ${TABLE}.TENURE =2 then '2 - Tenure 2'
     when ${TABLE}.TENURE =3 then '3 - Tenure 3'

@@ -139,9 +139,10 @@ view: web_traffic_ga {
             when ${page} = '/breakdown-cover/connected-car' then 'Product Page'
             when ${page} = '/car-genie' then 'Shop Home Page'
             when ${page} = '/connect-checkout/eligibility' then 'Eligibility'
+            when ${page} = '/connect-checkout/' then 'Eligibility'
             when ${page} = '/connect-checkout/delivery' then 'Delivery'
             when ${page} = '/connect-checkout/order-summary' then 'Order Summary'
-            when ${page} = '/connect-checkout/receipt/' then '7 - Receipt'
+            when ${page} = '/connect-checkout/receipt/' then 'Receipt'
             else 'Undefined'
         end;;
   }
@@ -154,6 +155,7 @@ view: web_traffic_ga {
             when ${page} = '/breakdown-cover/connected-car' then '1 - Product Page'
             when ${page} = '/car-genie' then '2 - Shop Home Page'
             when ${page} = '/connect-checkout/eligibility' then '3 - Eligibility'
+            when ${page} = '/connect-checkout/' then '3 - Eligibility'
             when ${page} = '/connect-checkout/delivery' then '4 - Delivery'
             when ${page} = '/connect-checkout/order-summary' then '5 - Order Summary'
             when ${page} = '/connect-checkout/payment' then '6 - Payment'
