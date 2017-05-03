@@ -162,6 +162,15 @@ view: web_traffic_ga {
             when ${page} = '/connect-checkout/receipt/' then '7 - Receipt'
             else 'Undefined'
         end;;
+
+    link: {
+      label: "Visitors Trend"
+      url: "/looks/244?f[web_traffic_ga.view_timestamp_date]=7%20days&f[web_traffic_ga.funnel_journey_page]={{filterable_value}}"
+    }
+    link: {
+      label: "Visitors Trend by Medium"
+      url: "/looks/246?f[web_traffic_ga.view_timestamp_date]=7%20days&f[web_traffic_ga.funnel_journey_page]={{filterable_value}}"
+    }
   }
 
   dimension: session_id {
@@ -191,22 +200,13 @@ view: web_traffic_ga {
 
   measure: views {
     label: "# Views"
-    group_label: "# Views"
+    group_label: "Views"
     type: count
-    link: {
-      label: "Views Trend"
-      url: "/looks/244"
-    }
-    link: {
-      label: "Views Trend  by Medium"
-      url: "/looks/246"
-#      #url: "/explore/ga_big_query_web_data/web_traffic_ga?fields=web_traffic_ga.view_timestamp_date,web_traffic_ga.visits_pp&fill_fields=web_traffic_ga.view_timestamp_date&sorts=web_traffic_ga.view_timestamp_date&limit=30&column_limit=50&query_timezone=Europe%2FLondon&vis=%7B%7D&filter_config=%7B%7D&origin=share-expanded"
-    }
   }
 
   measure: views_pp {
     label: "# Views Product Page"
-    group_label: "# Views"
+    group_label: "Views"
     hidden: no
     type: count
     filters: {
@@ -217,7 +217,7 @@ view: web_traffic_ga {
 
   measure: views_d {
     label: "# Views Delivery Page"
-    group_label: "# Views"
+    group_label: "Views"
     hidden: no
     type: count
     filters: {
@@ -228,7 +228,7 @@ view: web_traffic_ga {
 
   measure: views_fr {
     label: "# Views Final Receipt"
-    group_label: "# Views"
+    group_label: "Views"
     hidden: no
     type: count
     filters: {
@@ -249,7 +249,7 @@ view: web_traffic_ga {
     }
   }
 
-  measure: views_shp_to_fr_ratio {
+  measure: views_d_to_fr_ratio {
     label: "Delivery Page to Final Receipt Views Ratio %"
     group_label: "Views Ratio %"
     type: number
@@ -263,10 +263,70 @@ view: web_traffic_ga {
 
   measure: visitors {
     label: "# Visitors"
+    group_label: "Visitors"
     type: count_distinct
     sql:  ${cookie_id} ;;
   }
 
+  measure: visitors_pp {
+    label: "# Visitors Product Page"
+    group_label: "Visitors"
+    hidden: no
+    type: count_distinct
+    sql:  ${cookie_id} ;;
+    filters: {
+      field: page
+      value: "/breakdown-cover/connected-car"
+    }
+  }
+
+  measure: visitors_d {
+    label: "# Visitors Delivery Page"
+    group_label: "Visitors"
+    hidden: no
+    type: count_distinct
+    sql:  ${cookie_id} ;;
+    filters: {
+      field: page
+      value: "/connect-checkout/delivery"
+    }
+  }
+
+  measure: visitors_fr {
+    label: "# Visitors Final Receipt"
+    group_label: "Visitors"
+    hidden: no
+    type: count_distinct
+    sql:  ${cookie_id} ;;
+    filters: {
+      field: page
+      value: "/connect-checkout/receipt/"
+    }
+  }
+
+  measure: visitors_pp_to_fr_ratio {
+    label: "Product Page to Final Receipt Visitors Ratio %"
+    group_label: "Visitors Ratio %"
+    type: number
+    value_format: "0.00\%"
+    sql:  ${visitors_fr}/${visitors_pp}*100 ;;
+    link: {
+      label: "Visitors Ratio % Analysis"
+      url: "/looks/251?f[web_traffic_ga.view_timestamp_date]=7%20days"
+    }
+  }
+
+  measure: visitors_d_to_fr_ratio {
+    label: "Delivery Page to Final Receipt Visitors Ratio %"
+    group_label: "Visitors Ratio %"
+    type: number
+    value_format: "0.00\%"
+    sql:  ${visitors_fr}/${visitors_d}*100 ;;
+    link: {
+      label: "Visitors Ratio % Analysis"
+      url: "/looks/252?f[web_traffic_ga.view_timestamp_date]=7%20days"
+    }
+  }
   measure: sessions {
     label: "# Sessions"
     type: count_distinct
