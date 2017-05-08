@@ -8,7 +8,6 @@ view: web_traffic_ga {
                   visitStartTime,
                   DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
                   fullVisitorId AS cookie_ID,
-                  '' as membership_number,
                   visitId as session_ID,
                   CASE WHEN hits.page.pagePath like '%/connect-checkout/receipt/%' THEN LEFT(hits.page.pagePath,26) ELSE hits.page.pagePath END as page,
                   totals.timeOnSite as session_Duration_In_Seconds,
@@ -37,7 +36,6 @@ view: web_traffic_ga {
                   visitStartTime,
                   DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
                   fullVisitorId AS cookie_ID,
-                  '' as membership_number,
                   visitId as session_ID,
                   CASE WHEN hits.page.pagePath like '%/connect-checkout/receipt/%' THEN LEFT(hits.page.pagePath,26) ELSE hits.page.pagePath END as page,
                   totals.timeOnSite as session_Duration_In_Seconds,
@@ -103,10 +101,10 @@ view: web_traffic_ga {
     sql: ${TABLE}.GEO_NETWORK_COUNTRY ;;
   }
 
-  dimension: membership_number {
-    type: string
-    sql: ${TABLE}.MEMBERSHIP_NUMBER ;;
-  }
+   dimension: membership_number {
+     type: string
+     sql: ${web_traffic_ga_membership_number.membership_number} ;;
+   }
 
   dimension: source {
     type: string
@@ -345,4 +343,11 @@ view: web_traffic_ga {
     value_format: "0.00"
     sql: ${TABLE}.SESSION_DURATION_IN_SECONDS ;;
   }
+
+  measure: distinct_membership_number {
+    label: "# Membership Numbers"
+    type: count_distinct
+    sql:  ${web_traffic_ga_membership_number.membership_number} ;;
+  }
+
 }

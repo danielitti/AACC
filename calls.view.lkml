@@ -1,5 +1,5 @@
-view: calls_classification {
-  sql_table_name: SYSTEM.MRT_CONCAR_STG_CLASSIFICATION ;;
+view: calls {
+  sql_table_name: SYSTEM.MRT_CONCAR_STG_CALLS ;;
 
 
   dimension_group: call {
@@ -62,48 +62,56 @@ view: calls_classification {
 
   measure: acd_calls {
     label: "# of Processed Calls"
+    group_label: "Calls"
     type: sum
     sql: ${TABLE}.ACD_CALLS ;;
   }
 
   measure: acd_time {
     label: "Duration of Processed Calls (s)"
+    group_label: "Duration"
     type: sum
     sql: ${TABLE}.ACD_TIME ;;
   }
 
   measure: abn_calls {
     label: "# of Abbandoned Calls"
+    group_label: "Calls"
     type: sum
     sql: ${TABLE}.ABN_CALLS ;;
   }
 
   measure: abn_time {
     label: "Duration of Abbandoned Calls (s)"
+    group_label: "Duration"
     type: sum
     sql: ${TABLE}.ABN_TIME ;;
   }
 
   measure: other_calls {
     label: "# of Other Calls"
+    group_label: "Calls"
     type: sum
     sql: ${TABLE}.OTHER_CALLS ;;
   }
 
   measure: other_time {
     label: "Duration of Other Calls (s)"
+    group_label: "Duration"
     type: sum
     sql: ${TABLE}.OTHER_TIME ;;
   }
 
   measure: total_calls {
     label: "Total # of Calls"
+    group_label: "Calls"
     type: sum
     sql: ${TABLE}.ACD_CALLS + ${TABLE}.ABN_CALLS + ${TABLE}.OTHER_CALLS ;;
   }
 
   measure: total_time {
     label: "Total Duration of Calls (s)"
+    group_label: "Duration"
     type: sum
     sql: ${TABLE}.ACD_TIME + ${TABLE}.ABN_TIME + ${TABLE}.OTHER_TIME ;;
   }

@@ -31,4 +31,4 @@ explore: orders_details {
 # explore: customers {}
 # explore: orders {}
 
-explore: calls_classification {}
+explore: calls {}
