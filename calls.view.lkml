@@ -1,5 +1,5 @@
 view: calls {
-  sql_table_name: SYSTEM.MRT_CONCAR_STG_CALLS ;;
+  sql_table_name: SYSTEM.V_MRT_CONCAR_STG_CALLS ;;
 
 
   dimension_group: call {
@@ -55,6 +55,11 @@ view: calls {
     sql: ${TABLE}.VDN ;;
   }
 
+  dimension: vdn_category {
+    type: string
+    sql: ${TABLE}.VDN_CATEGORY ;;
+  }
+
   dimension: vdn_name {
     type: string
     sql: ${TABLE}.VDN_NAME ;;
@@ -63,6 +68,7 @@ view: calls {
   measure: acd_calls {
     label: "# of Processed Calls"
     group_label: "Calls"
+    value_format: "0"
     type: sum
     sql: ${TABLE}.ACD_CALLS ;;
   }
@@ -77,6 +83,7 @@ view: calls {
   measure: abn_calls {
     label: "# of Abbandoned Calls"
     group_label: "Calls"
+    value_format: "0"
     type: sum
     sql: ${TABLE}.ABN_CALLS ;;
   }
@@ -91,6 +98,7 @@ view: calls {
   measure: other_calls {
     label: "# of Other Calls"
     group_label: "Calls"
+    value_format: "0"
     type: sum
     sql: ${TABLE}.OTHER_CALLS ;;
   }
@@ -105,8 +113,13 @@ view: calls {
   measure: total_calls {
     label: "Total # of Calls"
     group_label: "Calls"
+    value_format: "0"
     type: sum
     sql: ${TABLE}.ACD_CALLS + ${TABLE}.ABN_CALLS + ${TABLE}.OTHER_CALLS ;;
+    link: {
+      label: "Total Calls Breakdown By Day"
+      url: "/looks/272?f[calls.call_date]=7%20days"
+    }
   }
 
   measure: total_time {

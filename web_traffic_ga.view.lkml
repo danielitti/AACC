@@ -24,7 +24,7 @@ view: web_traffic_ga {
                   device.isMobile as device_is_mobile
                   FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_],
                         TIMESTAMP('20170324'),
-                        TIMESTAMP('20180401')))
+                        TIMESTAMP(replace(string(date_add(current_date(), -2, 'DAY')), '-', ''))))
                   WHERE (hits.page.pagePath = '/breakdown-cover/connected-car'
                         OR hits.page.pagePath = '/car-genie'
                         OR hits.page.pagePath like '%connect-checkout%')
@@ -51,7 +51,7 @@ view: web_traffic_ga {
                   trafficSource.campaign as campaign,
                   device.isMobile as device_is_mobile
                   FROM  (TABLE_DATE_RANGE([the-aa-1470042790750:110663916.ga_sessions_intraday_],
-                        TIMESTAMP(replace(string(current_date()), '-', '')),
+                        TIMESTAMP(replace(string(date_add(current_date(), -1, 'DAY')), '-', '')),
                         TIMESTAMP(replace(string(current_date()), '-', ''))))
                   WHERE (hits.page.pagePath = '/breakdown-cover/connected-car'
                         OR hits.page.pagePath = '/car-genie'
@@ -151,7 +151,6 @@ view: web_traffic_ga {
     type: string
     sql: case
             when ${page} = '/breakdown-cover/connected-car' then '1 - Product Page'
-            when ${page} = '/car-genie' then '2 - Shop Home Page'
             when ${page} = '/connect-checkout/eligibility' then '3 - Eligibility'
             when ${page} = '/connect-checkout/' then '3 - Eligibility'
             when ${page} = '/connect-checkout/delivery' then '4 - Delivery'
@@ -160,7 +159,7 @@ view: web_traffic_ga {
             when ${page} = '/connect-checkout/receipt/' then '7 - Receipt'
             else 'Undefined'
         end;;
-
+            # when ${page} = '/car-genie' then '2 - Shop Home Page'
     link: {
       label: "Visitors Trend"
       url: "/looks/244?f[web_traffic_ga.view_timestamp_date]=7%20days&f[web_traffic_ga.funnel_journey_page]={{filterable_value}}"
