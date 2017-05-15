@@ -124,16 +124,12 @@ view: orders {
   measure: discounted_orders_count {
     group_label: "Orders"
     label: "# of Discounted Orders"
-    type: count
+    type: count_distinct
+    sql:  ${TABLE}.MATCHBOX_ORDER_ID ;;
     filters: {
      field: dimension_discounted_gross_amount
      value: "-0"
     }
-    link: {
-      label: "Map"
-      url: "/looks/254"
-    }
   }
-
 
 }

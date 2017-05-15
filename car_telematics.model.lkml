@@ -6,7 +6,7 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
-# explore: intelematics_devices {}
+ explore: intelematics_devices {}
 
 # explore: intelematics_push_admin_events {}
 
@@ -16,6 +16,6 @@ include: "*.dashboard"
 
 # explore: intelematics_push_events {}
 
-explore: intelematics_trips {}
+ explore: intelematics_trips {}
 
-explore: intelematics_vehicles {}
+# explore: intelematics_vehicles {}

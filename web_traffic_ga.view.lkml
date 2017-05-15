@@ -171,7 +171,7 @@ view: web_traffic_ga {
   }
 
   dimension: session_id {
-    type: string
+    type: number
     sql: ${TABLE}.SESSION_ID ;;
   }
 

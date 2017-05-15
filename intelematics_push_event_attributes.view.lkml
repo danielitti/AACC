@@ -1,5 +1,8 @@
 view: intelematics_push_event_attributes {
-  sql_table_name: public.aa_push_event_attributes ;;
+  #sql_table_name: public.aa_push_event_attributes ;;
+  derived_table: {
+    sql:  select * from public.aa_push_event_attributes where rs_environment = 'prod';;
+  }
 
   dimension: description {
     type: string
@@ -13,20 +16,25 @@ view: intelematics_push_event_attributes {
 
   dimension: rs_club {
     type: string
+    hidden:  yes
     sql: ${TABLE}.rs_club ;;
   }
 
   dimension: rs_environment {
     type: string
+    hidden:  yes
     sql: ${TABLE}.rs_environment ;;
   }
 
   dimension: rs_id {
     type: string
+    hidden:  yes
     sql: ${TABLE}.rs_id ;;
   }
 
   dimension: rs_pusheventid {
+    label: "Push Event ID"
+    group_label: "ID"
     type: string
     sql: ${TABLE}.rs_pusheventid ;;
   }
@@ -36,7 +44,9 @@ view: intelematics_push_event_attributes {
     sql: ${TABLE}.value ;;
   }
 
-  measure: count {
+  measure: total_event_attributes {
+    label: "# Event Attributes"
+    group_label: "Count"
     type: count
     drill_fields: [name]
   }
