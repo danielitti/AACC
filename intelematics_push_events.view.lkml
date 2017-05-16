@@ -5,9 +5,7 @@ view: intelematics_push_events {
   }
 
   dimension: id {
-    label: "Push Event ID"
-    group_label: "ID"
-    primary_key: yes
+    hidden: yes
     type: string
     sql: ${TABLE}.id ;;
   }
@@ -70,8 +68,10 @@ view: intelematics_push_events {
   }
 
   dimension: rs_id {
+    label: "Push Event ID"
+    group_label: "ID"
+    primary_key: yes
     type: string
-    hidden:  yes
     sql: ${TABLE}.rs_id ;;
   }
 
@@ -95,7 +95,8 @@ view: intelematics_push_events {
   measure: total_push_events {
     label: "# Push Events"
     group_label: "Count"
-    type: count
-    drill_fields: [id]
+    type: count_distinct
+    sql: ${TABLE}.rs_id ;;
   }
+
 }

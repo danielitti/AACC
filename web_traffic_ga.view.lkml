@@ -172,6 +172,7 @@ view: web_traffic_ga {
 
   dimension: session_id {
     type: number
+    primary_key: yes
     sql: ${TABLE}.SESSION_ID ;;
   }
 
@@ -332,16 +333,35 @@ view: web_traffic_ga {
 
   measure: session_duration_in_seconds {
     label: "Session Duration In Seconds"
-    type: sum
+    group_label: "Session Duration"
+    type: sum_distinct
     sql: ${TABLE}.SESSION_DURATION_IN_SECONDS ;;
   }
 
   measure: avg_session_duration_in_seconds {
     label: "AVG Session Duration In Seconds"
+    group_label: "Session Duration"
     type: average
-    value_format: "0.00"
+    value_format: "#,##0.00"
     sql: ${TABLE}.SESSION_DURATION_IN_SECONDS ;;
   }
+
+  measure: session_duration_in_minutess {
+    label: "Session Duration In Minutes"
+    group_label: "Session Duration"
+    value_format: "#,##0.00"
+    type: sum_distinct
+    sql: ${TABLE}.SESSION_DURATION_IN_SECONDS /60 ;;
+  }
+
+  measure: avg_session_duration_in_minutes {
+    label: "AVG Session Duration In Minutes"
+    group_label: "Session Duration"
+    type: average
+    value_format: "#,##0.00"
+    sql: ${TABLE}.SESSION_DURATION_IN_SECONDS /60;;
+  }
+
 
   measure: distinct_membership_number {
     label: "# Membership Numbers"

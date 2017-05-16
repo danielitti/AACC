@@ -36,6 +36,7 @@ view: intelematics_push_event_attributes {
     label: "Push Event ID"
     group_label: "ID"
     type: string
+    hidden:  yes
     sql: ${TABLE}.rs_pusheventid ;;
   }
 
@@ -48,6 +49,6 @@ view: intelematics_push_event_attributes {
     label: "# Event Attributes"
     group_label: "Count"
     type: count
-    drill_fields: [name]
   }
+
 }
