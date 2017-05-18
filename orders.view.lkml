@@ -57,7 +57,7 @@ view: orders {
 
   dimension_group: order {
     type: time
-    timeframes: [date, week, month]
+    timeframes: [date, week, month, time]
     sql: ${TABLE}.ORDER_DATE ;;
   }
 
