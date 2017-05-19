@@ -52,7 +52,7 @@ include: "*.dashboard"
   join: intelematics_trips {
     view_label: "Trips"
     type: inner
-    sql_on: ${intelematics_devices.id} = ${intelematics_trips.deviceid};; # AND ${intelematics_trip_IDs.vehicleid} = ${intelematics_trips.vehicleid}  AND ${intelematics_trip_IDs.driverid} = ${intelematics_trips.driverid};;
+    sql_on: ${intelematics_devices.id} = ${intelematics_trips.deviceid} AND ${intelematics_trip_IDs.vehicleid} = ${intelematics_trips.vehicleid}  AND ${intelematics_trip_IDs.driverid} = ${intelematics_trips.driverid};;
     relationship: one_to_many
     type: left_outer
   }
