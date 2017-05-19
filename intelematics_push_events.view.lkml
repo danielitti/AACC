@@ -68,7 +68,7 @@ view: intelematics_push_events {
   }
 
   dimension: rs_id {
-    label: "Push Event ID"
+    label: "Event ID"
     group_label: "ID"
     primary_key: yes
     type: string
@@ -93,7 +93,7 @@ view: intelematics_push_events {
   }
 
   measure: total_push_events {
-    label: "# Push Events"
+    label: "# Events"
     group_label: "Count"
     type: count_distinct
     sql: ${TABLE}.rs_id ;;

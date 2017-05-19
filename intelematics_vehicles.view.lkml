@@ -168,16 +168,18 @@ view: intelematics_vehicles {
     sql: ${TABLE}.variant ;;
   }
 
-  dimension: vin {
-    label: "Vin"
-    type: string
-    sql: ${TABLE}.vin ;;
-  }
+# do not expose this info since it is PII
+  # dimension: vin {
+  #   label: "Vin"
+  #   type: string
+  #   sql: ${TABLE}.vin ;;
+  # }
 
   measure: total_vehicles {
     label: "# Vehicles"
     group_label: "Count"
-    type: count
+    type: count_distinct
+    sql: ${id} ;;
     drill_fields: [id]
   }
 

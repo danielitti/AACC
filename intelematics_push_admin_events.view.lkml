@@ -38,8 +38,9 @@ view: intelematics_push_admin_events {
   }
 
   dimension: rs_id {
+    label: "Admin Event ID"
+    group_label: "ID"
     type: string
-    hidden: yes
     sql: ${TABLE}.rs_id ;;
   }
 
@@ -59,7 +60,8 @@ view: intelematics_push_admin_events {
   measure: total_admin_events {
     label: "# Admin Events"
     group_label: "Count"
-    type: count
-    drill_fields: []
+    type: count_distinct
+    sql: ${rs_id} ;;
+    drill_fields: [rs_id]
   }
 }

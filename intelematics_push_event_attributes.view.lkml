@@ -33,7 +33,7 @@ view: intelematics_push_event_attributes {
   }
 
   dimension: rs_pusheventid {
-    label: "Push Event ID"
+    label: "Event ID"
     group_label: "ID"
     type: string
     hidden:  yes

@@ -490,7 +490,7 @@ view: intelematics_trips {
   }
 
   measure: active_devices {
-    label: "# Distinct Active Devices"
+    label: "# Active Devices"
     group_label: "Count"
     type:  count_distinct
     sql:  ${deviceid} ;;

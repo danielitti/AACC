@@ -5,7 +5,7 @@ view: intelematics_push_dtcs {
   }
 
   dimension: id {
-    label: "Push DTCS ID"
+    label: "DTCS ID"
     group_label: "ID"
     primary_key: yes
     type: string
@@ -138,9 +138,10 @@ view: intelematics_push_dtcs {
   }
 
   measure: total_push_DTCS {
-    label: "# Push DTCS"
+    label: "# DTCS"
     group_label: "Count"
-    type: count
+    type:  count_distinct
+    sql:  ${id} ;;
     drill_fields: [id]
   }
 }

@@ -134,7 +134,8 @@ view: intelematics_devices {
   measure: total_devices {
     label: "# Devices"
     group_label: "Count"
-    type: count
+    type:  count_distinct
+    sql:  ${id} ;;
     drill_fields: [id]
   }
 
