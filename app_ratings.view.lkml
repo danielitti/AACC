@@ -1,6 +1,16 @@
 view: app_ratings {
   sql_table_name: SYSTEM.MRT_CONCAR_STG_APP_RATINGS ;;
 
+  dimension: platform {
+    type: string
+    sql: ${TABLE}.PLATFORM ;;
+  }
+
+  dimension: language {
+    type: string
+    sql: ${TABLE}.LANGUAGE ;;
+  }
+
   dimension: app_id {
     type: string
     sql: ${TABLE}.APP_ID ;;
@@ -9,11 +19,6 @@ view: app_ratings {
   dimension: app_name {
     type: string
     sql: ${TABLE}.APP_NAME ;;
-  }
-
-  dimension: platform {
-    type: string
-    sql: ${TABLE}.PLATFORM ;;
   }
 
   dimension: publisher_id {
@@ -37,6 +42,12 @@ view: app_ratings {
     type: string
     sql: ${TABLE}.TITLE ;;
   }
+
+  dimension: review {
+    type: string
+    sql: ${TABLE}.REVIEW ;;
+  }
+
 
   dimension: version {
     type: string
