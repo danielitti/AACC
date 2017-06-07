@@ -9,7 +9,8 @@ view: web_traffic_ga {
                   DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
                   fullVisitorId AS cookie_ID,
                   visitId as session_ID,
-                  CASE WHEN hits.page.pagePath like '%/connect-checkout/receipt/%' THEN LEFT(hits.page.pagePath,26) ELSE hits.page.pagePath END as page,
+                  hits.page.pagePath as pagePath,
+                  CASE WHEN hits.page.pagePath like '/connect-checkout/receipt%' THEN LEFT(hits.page.pagePath,25) ELSE hits.page.pagePath END as page,
                   totals.timeOnSite as session_Duration_In_Seconds,
                   device.mobileDeviceBranding as device_Mobile_Branding,
                   device.mobileDeviceModel as device_Mobile_Model,
@@ -37,7 +38,8 @@ view: web_traffic_ga {
                   DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
                   fullVisitorId AS cookie_ID,
                   visitId as session_ID,
-                  CASE WHEN hits.page.pagePath like '%/connect-checkout/receipt/%' THEN LEFT(hits.page.pagePath,26) ELSE hits.page.pagePath END as page,
+                  hits.page.pagePath as pagePath,
+                  CASE WHEN hits.page.pagePath like '/connect-checkout/receipt%' THEN LEFT(hits.page.pagePath,25) ELSE hits.page.pagePath END as page,
                   totals.timeOnSite as session_Duration_In_Seconds,
                   device.mobileDeviceBranding as device_Mobile_Branding,
                   device.mobileDeviceModel as device_Mobile_Model,
@@ -131,6 +133,12 @@ view: web_traffic_ga {
     sql: ${TABLE}.PAGE ;;
   }
 
+
+  dimension:page_path  {
+    type: string
+    sql: ${TABLE}.PAGEPATH ;;
+  }
+
   dimension: page_name {
     type: string
     sql: case
@@ -140,7 +148,7 @@ view: web_traffic_ga {
             when ${page} = '/connect-checkout/' then 'Eligibility'
             when ${page} = '/connect-checkout/delivery' then 'Delivery'
             when ${page} = '/connect-checkout/order-summary' then 'Order Summary'
-            when ${page} = '/connect-checkout/receipt/' then 'Receipt'
+            when ${page} = '/connect-checkout/receipt' then 'Receipt'
             else 'Undefined'
         end;;
   }
@@ -156,7 +164,7 @@ view: web_traffic_ga {
             when ${page} = '/connect-checkout/delivery' then '4 - Delivery'
             when ${page} = '/connect-checkout/order-summary' then '5 - Order Summary'
             when ${page} = '/connect-checkout/payment' then '6 - Payment'
-            when ${page} = '/connect-checkout/receipt/' then '7 - Receipt'
+            when ${page} = '/connect-checkout/receipt' then '7 - Receipt'
             else 'Undefined'
         end;;
             # when ${page} = '/car-genie' then '2 - Shop Home Page'
@@ -231,7 +239,7 @@ view: web_traffic_ga {
     type: count
     filters: {
       field: page
-      value: "/connect-checkout/receipt/"
+      value: "/connect-checkout/receipt"
     }
   }
 
@@ -298,7 +306,7 @@ view: web_traffic_ga {
     sql:  ${cookie_id} ;;
     filters: {
       field: page
-      value: "/connect-checkout/receipt/"
+      value: "/connect-checkout/receipt"
     }
   }
 
