@@ -31,14 +31,19 @@ view: web_traffic_ga_membership_number {
 
   dimension: membership_number {
      type: string
-    hidden:  yes
+    # hidden:  yes
      sql: ${TABLE}.MEMBERSHIP_NUMBER ;;
    }
+  dimension: pseudo_primary {
+    sql: CONCAT(${cookie_id},${membership_number}) ;;
+    hidden: yes
+    primary_key: yes
+  }
 
   measure: distinct_membership_number {
     label: "Distinct Membership  Number"
     type: count_distinct
-    hidden:  yes
+    # hidden:  yes
     sql:  ${membership_number} ;;
   }
 

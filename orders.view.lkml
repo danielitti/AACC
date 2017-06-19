@@ -21,22 +21,9 @@ view: orders {
     sql: ${TABLE}.CAR_MODEL_YEAR ;;
   }
 
-  dimension: car_vrm {
-    hidden: yes
-    label: "Car VRM"
-    type: string
-    sql: ${TABLE}.VRM ;;
-  }
-
   dimension: matchbox_order_id {
     type: string
     sql: ${TABLE}.MATCHBOX_ORDER_ID ;;
-  }
-
-  dimension: matchbox_vrm {
-    label: "Matchbox VRM"
-    type: string
-    sql: ${TABLE}.MATCHBOX_VRM ;;
   }
 
   dimension: membership_number {
