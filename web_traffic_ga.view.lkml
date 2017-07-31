@@ -3,7 +3,7 @@ view: web_traffic_ga {
     sql:  SELECT  *
           FROM
 
-          (SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as view_timestamp,
+          (SELECT STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%d %b %Y %H:%M:%S") as view_ddmmmyyyy_hhmmss,
                   SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as view_timestamp,
                   visitStartTime,
                   DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
@@ -32,7 +32,7 @@ view: web_traffic_ga {
                         AND hits.type = "PAGE"),
 
 
-          (SELECT  --STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%Y-%m-%d %H:%M:%S") as view_timestamp,
+          (SELECT STRFTIME_UTC_USEC(SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000),"%d %b %Y %H:%M:%S") as view_ddmmmyyyy_hhmmss,
                   SEC_TO_TIMESTAMP(visitStartTime+ hits.time/1000) as view_timestamp,
                   visitStartTime,
                   DAYOFWEEK(date) AS day_Of_Week, #Where 1 = Sunday,
@@ -158,13 +158,13 @@ view: web_traffic_ga {
     label: "Funnel Journey"
     type: string
     sql: case
-            when ${page} = '/breakdown-cover/connected-car' then '1 - Product Page'
-            when ${page} = '/connect-checkout/eligibility' then '3 - Eligibility'
-            when ${page} = '/connect-checkout/' then '3 - Eligibility'
-            when ${page} = '/connect-checkout/delivery' then '4 - Delivery'
-            when ${page} = '/connect-checkout/order-summary' then '5 - Order Summary'
-            when ${page} = '/connect-checkout/payment' then '6 - Payment'
-            when ${page} = '/connect-checkout/receipt' then '7 - Receipt'
+            when ${page} = '/breakdown-cover/connected-car' then 'Product Page'
+            when ${page} = '/connect-checkout/eligibility' then '1 - Eligibility'
+            when ${page} = '/connect-checkout/' then '1 - Eligibility'
+            when ${page} = '/connect-checkout/delivery' then '2 - Delivery'
+            when ${page} = '/connect-checkout/order-summary' then '3 - Order Summary'
+            when ${page} = '/connect-checkout/payment' then '4 - Payment'
+            when ${page} = '/connect-checkout/receipt' then '5 - Receipt'
             else 'Undefined'
         end;;
             # when ${page} = '/car-genie' then '2 - Shop Home Page'
@@ -177,6 +177,22 @@ view: web_traffic_ga {
       url: "/looks/246?f[web_traffic_ga.view_timestamp_date]=7%20days&f[web_traffic_ga.funnel_journey_page]={{filterable_value}}"
     }
   }
+
+  dimension: funnel_journey_page_order {
+    label: "Funnel Journey Order"
+    type: string
+    sql: case
+            when ${page} = '/breakdown-cover/connected-car' then '1'
+            when ${page} = '/connect-checkout/eligibility' then '2'
+            when ${page} = '/connect-checkout/' then '2'
+            when ${page} = '/connect-checkout/delivery' then '3'
+            when ${page} = '/connect-checkout/order-summary' then '4'
+            when ${page} = '/connect-checkout/payment' then '5'
+            when ${page} = '/connect-checkout/receipt' then '6'
+            else '7'
+        end;;
+
+    }
 
   dimension: session_id {
     type: number
@@ -196,6 +212,12 @@ view: web_traffic_ga {
             when ${TABLE}.DAY_OF_WEEK = 7 then '6 - Saturday'
             else null
         end;;
+  }
+
+  dimension: view_ddmmmyyyy_hhmmss {
+    label: "View Formatted Date"
+    type: string
+    sql: ${TABLE}.view_ddmmmyyyy_hhmmss ;;
   }
 
   dimension_group: view_timestamp {

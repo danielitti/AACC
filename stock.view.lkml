@@ -24,6 +24,11 @@ view: stock {
     sql: ${TABLE}.MAX_STOCK_DATE;;
   }
 
+  dimension: last_stock_date_formatted {
+    type: string
+    sql: ${TABLE}.MAX_STOCK_DATE_FORMATTED;;
+  }
+
   measure: qty_available {
     group_label: "# Available"
     label: "# Available"
